@@ -33,12 +33,12 @@ typealias PlaybackSpeed = Double
 
 extension AnimatedFrame {
   
-  func makeAnimatedFrameWithNewDuration(_ duration: TimeInterval) -> AnimatedFrame {
+  func newAnimatedFrameWith(duration: TimeInterval) -> AnimatedFrame {
     return AnimatedFrame(image: self.image, duration: duration)
   }
   
   
-  func makeAnimatedFrameWithNewSpeed(_ speed: PlaybackSpeed) -> AnimatedFrame {
+  func newAnimatedFrameWith(speed: PlaybackSpeed) -> AnimatedFrame {
     let newDuration = self.duration / speed
     return AnimatedFrame(image: self.image, duration: newDuration)
   }
