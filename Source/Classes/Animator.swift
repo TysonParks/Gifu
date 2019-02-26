@@ -17,9 +17,6 @@ public class Animator {
   /// Responsible for loading individual frames and resizing them if necessary.
   var frameStore: FrameStore?
 
-  /// Playback speed of gifs relative to original speed
-  var playbackSpeed: Double?
-    
   /// Tracks whether the display link is initialized.
   private var displayLinkInitialized: Bool = false
 
