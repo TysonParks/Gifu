@@ -298,7 +298,7 @@ private extension FrameStore {
     var newDuration: TimeInterval = 0
     
     originalAnimatedFrames.forEach {
-      let newAnimatedFrame = $0.makeAnimatedFrameWithNewSpeed(speed)
+      let newAnimatedFrame = $0.newAnimatedFrameWith(speed: speed)
       newAnimatedFrames.append(newAnimatedFrame)
       newDuration += newAnimatedFrame.duration
     }
