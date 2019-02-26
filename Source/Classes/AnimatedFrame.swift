@@ -31,9 +31,10 @@ struct AnimatedFrame {
 
 extension AnimatedFrame {
   
-  func newAnimatedFrameWith(duration: TimeInterval) -> AnimatedFrame {
-    return AnimatedFrame(image: self.image, duration: duration)
-  }
+  // DEPRECATE
+//  func newAnimatedFrameWith(duration: TimeInterval) -> AnimatedFrame {
+//    return AnimatedFrame(image: self.image, duration: duration)
+//  }
   
   
   func newAnimatedFrameWith(speed: PlaybackSpeed) -> AnimatedFrame {
