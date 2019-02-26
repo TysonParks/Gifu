@@ -194,8 +194,15 @@ fileprivate class DisplayLinkProxy {
 extension Animator {
   
   func changeAnimationSpeed(to speed: PlaybackSpeed) {
-    guard let currentFrameStore = self.frameStore else { return }
-    self.originalFrameStore = currentFrameStore
+    let currentFrameStore: FrameStore
+    
+    if let originalFrameStore = self.originalFrameStore {
+      currentFrameStore = originalFrameStore
+    } else {
+      guard let frameStore = self.frameStore else { return }
+      self.originalFrameStore = frameStore
+      currentFrameStore = frameStore
+    }
     
     let newFrameStore = currentFrameStore.newFrameStoreWith(speed: speed)
     self.frameStore = newFrameStore
