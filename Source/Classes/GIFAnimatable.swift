@@ -14,11 +14,7 @@ public protocol GIFAnimatable: class {
 
   /// Content mode used for resizing the frames.
   var contentMode: UIView.ContentMode { get set }
-  
-  
-  var playbackSpeed: Double { get set }
 }
-
 
 /// A single-property protocol that animatable classes can optionally conform to.
 public protocol ImageContainer {
@@ -204,5 +200,22 @@ extension GIFAnimatable {
   /// Calls setNeedsDisplay on the layer whenever the animator has a new frame. Should *not* be called directly.
   func animatorHasNewFrame() {
     layer.setNeedsDisplay()
+  }
+}
+
+
+/// Tyson addition
+public typealias PlaybackSpeed = Double
+
+extension GIFAnimatable {
+  
+  public func changeAnimationSpeed(to speed: PlaybackSpeed) {
+    self.animator?.changeAnimationSpeed(to: speed)
+  }
+  
+  public func changeAnimationDuration(to duration: TimeInterval) {
+    let currentDuration = self.gifLoopDuration
+    let newSpeed = currentDuration / duration
+    self.changeAnimationSpeed(to: newSpeed)
   }
 }

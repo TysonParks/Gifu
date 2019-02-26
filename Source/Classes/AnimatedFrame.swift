@@ -29,8 +29,6 @@ struct AnimatedFrame {
 }
 
 
-typealias PlaybackSpeed = Double
-
 extension AnimatedFrame {
   
   func newAnimatedFrameWith(duration: TimeInterval) -> AnimatedFrame {

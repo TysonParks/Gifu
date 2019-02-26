@@ -280,7 +280,7 @@ private extension FrameStore {
 
 
 
-private extension FrameStore {
+extension FrameStore {
 
   func newFrameStoreWith(loopDuration: TimeInterval) -> FrameStore {
     let originalDuration = self.loopDuration

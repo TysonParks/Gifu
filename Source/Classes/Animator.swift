@@ -16,6 +16,9 @@ public class Animator {
 
   /// Responsible for loading individual frames and resizing them if necessary.
   var frameStore: FrameStore?
+  
+  /// Tyson addition
+  var originalFrameStore: FrameStore?
 
   /// Tracks whether the display link is initialized.
   private var displayLinkInitialized: Bool = false
@@ -184,4 +187,17 @@ fileprivate class DisplayLinkProxy {
 
   /// Lets the target update the frame if needed.
   @objc func onScreenUpdate() { target?.updateFrameIfNeeded() }
+}
+
+
+/// Tyson addition
+extension Animator {
+  
+  func changeAnimationSpeed(to speed: PlaybackSpeed) {
+    guard let currentFrameStore = self.frameStore else { return }
+    self.originalFrameStore = currentFrameStore
+    
+    let newFrameStore = currentFrameStore.newFrameStoreWith(speed: speed)
+    self.frameStore = newFrameStore
+  }
 }
