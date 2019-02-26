@@ -181,7 +181,9 @@
 				00B8C7411A364DA400C188E7 /* Supporting Files */,
 				71E8B2B82038784C0037BA62 /* Gifu-tvOS-Info.plist */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		00B8C73F1A364DA400C188E7 /* Products */ = {
 			isa = PBXGroup;
