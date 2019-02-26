@@ -16,7 +16,7 @@ public protocol GIFAnimatable: class {
   var contentMode: UIView.ContentMode { get set }
   
   
-  var playbackSpeed: Double? { get set }
+  var playbackSpeed: Double { get set }
 }
 
 

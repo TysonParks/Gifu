@@ -28,3 +28,19 @@ struct AnimatedFrame {
   }
 }
 
+
+typealias PlaybackSpeed = Double
+
+extension AnimatedFrame {
+  
+  func makeAnimatedFrameWithNewDuration(_ duration: TimeInterval) -> AnimatedFrame {
+    return AnimatedFrame(image: self.image, duration: duration)
+  }
+  
+  
+  func makeAnimatedFrameWithNewSpeed(_ speed: PlaybackSpeed) -> AnimatedFrame {
+    let newDuration = self.duration / speed
+    return AnimatedFrame(image: self.image, duration: newDuration)
+  }
+  
+}

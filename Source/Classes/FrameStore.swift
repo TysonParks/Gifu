@@ -91,6 +91,25 @@ class FrameStore {
     self.bufferFrameCount = framePreloadCount
     self.loopCount = loopCount
   }
+  
+  /// Tyson addition
+  private init(animatedFrames: [AnimatedFrame],
+               frameCount: Int,
+               loopDuration: TimeInterval,
+               imageSource: CGImageSource,
+               size: CGSize,
+               contentMode: UIView.ContentMode,
+               framePreloadCount: Int,
+               loopCount: Int) {
+    self.animatedFrames = animatedFrames
+    self.frameCount = frameCount
+    self.loopDuration = loopDuration
+    self.imageSource = imageSource
+    self.size = size
+    self.contentMode = contentMode
+    self.bufferFrameCount = framePreloadCount
+    self.loopCount = loopCount
+  }
 
   // MARK: - Frames
   /// Loads the frames from an image source, resizes them, then caches them in `animatedFrames`.
@@ -257,4 +276,43 @@ private extension FrameStore {
   func resetAnimatedFrames() {
     animatedFrames = []
   }
+}
+
+
+
+private extension FrameStore {
+
+  func newFrameStoreWith(loopDuration: TimeInterval) -> FrameStore {
+    let originalDuration = self.loopDuration
+    let newSpeed = loopDuration / originalDuration
+    
+    return self.newFrameStoreWith(speed: newSpeed)
+  }
+  
+  
+  func newFrameStoreWith(speed: PlaybackSpeed) -> FrameStore {
+    let originalStore = self
+    let originalAnimatedFrames = originalStore.animatedFrames
+
+    var newAnimatedFrames = [AnimatedFrame]()
+    var newDuration: TimeInterval = 0
+    
+    originalAnimatedFrames.forEach {
+      let newAnimatedFrame = $0.makeAnimatedFrameWithNewSpeed(speed)
+      newAnimatedFrames.append(newAnimatedFrame)
+      newDuration += newAnimatedFrame.duration
+    }
+    
+    let newStore = FrameStore(animatedFrames: newAnimatedFrames,
+                              frameCount: originalStore.frameCount,
+                              loopDuration: newDuration,
+                              imageSource: originalStore.imageSource,
+                              size: originalStore.size,
+                              contentMode: originalStore.contentMode,
+                              framePreloadCount: originalStore.bufferFrameCount,
+                              loopCount: originalStore.loopCount)
+
+    return newStore
+  }
+  
 }
