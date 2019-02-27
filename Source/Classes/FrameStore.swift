@@ -294,12 +294,10 @@ extension FrameStore {
 //    
 //    return self.newFrameStoreWith(speed: newSpeed)
 //  }
-  
-  
   func newFrameStoreWith(speed: PlaybackSpeed) -> FrameStore {
     let originalStore = self
     let originalAnimatedFrames = originalStore.animatedFrames
-
+    
     var newAnimatedFrames = [AnimatedFrame]()
     var newDuration: TimeInterval = 0
     
@@ -324,4 +322,33 @@ extension FrameStore {
     return newStore
   }
   
+  
+  func newFrameStoreWithSynchronized(speed: PlaybackSpeed) -> FrameStore {
+    let originalStore = self
+    let originalAnimatedFrames = originalStore.animatedFrames
+
+    var newAnimatedFrames = [AnimatedFrame]()
+    var newDuration: TimeInterval = 0
+    
+    originalAnimatedFrames.forEach {
+      let newAnimatedFrame = $0.newAnimatedFrameWithSynchronized(speed: speed)
+      newAnimatedFrames.append(newAnimatedFrame)
+      newDuration += newAnimatedFrame.duration
+    }
+    
+    let newStore = FrameStore(animatedFrames: newAnimatedFrames,
+                              loopDuration: newDuration,
+                              frameCount: originalStore.frameCount,
+                              imageSource: originalStore.imageSource,
+                              size: originalStore.size,
+                              contentMode: originalStore.contentMode,
+                              framePreloadCount: originalStore.bufferFrameCount,
+                              loopCount: originalStore.loopCount,
+                              currentLoop: originalStore.currentLoop,
+                              currentFrameIndex: originalStore.currentFrameIndex,
+                              timeSinceLastFrameChange: originalStore.timeSinceLastFrameChange)
+    
+    return newStore
+  }
+
 }

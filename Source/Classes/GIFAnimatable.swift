@@ -205,7 +205,40 @@ extension GIFAnimatable {
 
 
 /// Tyson addition
+enum ScreenRefreshRates: Int {
+  case fifteenFPS = 15
+  case thirtyFPS = 30
+  case sixtyFPS = 60
+  case oneTwentyFPS = 120
+  case twoFortyFPS = 240
+}
+
 public typealias PlaybackSpeed = Double
+
+extension PlaybackSpeed {
+  
+  func synchronized(toScreenRefresh fps: ScreenRefreshRates = .sixtyFPS) -> Double {
+    return self._synchronize(self, toScreenRefresh: fps)
+  }
+  
+  
+  private func _synchronize(_ duration: Double, toScreenRefresh fps: ScreenRefreshRates = .sixtyFPS) -> Double {
+    //    if duration < 0 { return nil }
+    let fpsValue = Double(fps.rawValue)
+    let syncedDuration: Double
+    
+    let frameRateMultipliedDuration = duration * fpsValue
+    let closestWholeDividend = frameRateMultipliedDuration.rounded(.toNearestOrAwayFromZero)
+    if closestWholeDividend == 0 {
+      syncedDuration = 1 / fpsValue
+    } else {
+      syncedDuration = closestWholeDividend / fpsValue
+    }
+    
+    return syncedDuration
+  }
+}
+
 
 extension GIFAnimatable {
   

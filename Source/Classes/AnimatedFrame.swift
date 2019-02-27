@@ -28,7 +28,7 @@ struct AnimatedFrame {
   }
 }
 
-
+/// Tyson addition
 extension AnimatedFrame {
   
   // DEPRECATE
@@ -40,6 +40,14 @@ extension AnimatedFrame {
   func newAnimatedFrameWith(speed: PlaybackSpeed) -> AnimatedFrame {
     let newDuration = self.duration / speed
     return AnimatedFrame(image: self.image, duration: newDuration)
+  }
+  
+  
+  func newAnimatedFrameWithSynchronized(speed: PlaybackSpeed) -> AnimatedFrame {
+    let syncedDuration = self.duration.synchronized()
+    let spedDuration = syncedDuration / speed
+    let syncedSpedDuration = spedDuration.synchronized()
+    return AnimatedFrame(image: self.image, duration: syncedSpedDuration)
   }
   
 }
