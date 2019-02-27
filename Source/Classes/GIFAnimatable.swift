@@ -206,8 +206,31 @@ extension GIFAnimatable {
 
 
 /// Tyson addition
-enum ScreenRefreshRates: Int {
+extension GIFAnimatable {
+  
+  public func changeAnimationSpeed(to speed: PlaybackSpeed, synchronized: Bool = true) {
+    self.animator?.changeAnimationSpeed(to: speed, synchronized: synchronized)
+  }
+  
+  public func changeAnimationDuration(to duration: TimeInterval, synchronized: Bool = true) {
+    let currentDuration = self.gifLoopDuration
+    let newSpeed = currentDuration / duration
+    self.changeAnimationSpeed(to: newSpeed, synchronized: synchronized)
+  }
+  
+  // Could change this to setShouldSynchronizeFrames(synchronize: Bool) and create a setShouldSynchronizeFrames Animator property to be set by this function??
+  public func synchronizeFrames() {
+    self.changeAnimationSpeed(to: 1.0, synchronized: true)
+  }
+}
+
+
+// The following ScreenRefreshRates enum, PlaybackSpeed typealias and extension could possibly go into its own 'Double' Extension file?
+// Or is there a more suitable place for these things to live?
+enum RefreshFrameRates: Int {
+  case tenFPS = 10
   case fifteenFPS = 15
+  case twentyFPS = 20
   case thirtyFPS = 30
   case sixtyFPS = 60
   case oneTwentyFPS = 120
@@ -218,12 +241,12 @@ public typealias PlaybackSpeed = Double
 
 extension PlaybackSpeed {
   
-  func synchronized(toScreenRefresh fps: ScreenRefreshRates = .sixtyFPS) -> Double {
-    return self._synchronize(self, toScreenRefresh: fps)
+  func synchronized(toScreenRefresh fps: RefreshFrameRates = .sixtyFPS) -> Double {
+    return self._synchronize(self, toScreenRefreshRate: fps)
   }
   
   
-  private func _synchronize(_ duration: Double, toScreenRefresh fps: ScreenRefreshRates = .sixtyFPS) -> Double {
+  private func _synchronize(_ duration: Double, toScreenRefreshRate fps: RefreshFrameRates = .sixtyFPS) -> Double {
     //    if duration < 0 { return nil }
     let fpsValue = Double(fps.rawValue)
     let syncedDuration: Double
@@ -238,20 +261,4 @@ extension PlaybackSpeed {
     
     return syncedDuration
   }
-}
-
-
-extension GIFAnimatable {
-  
-  public func changeAnimationSpeed(to speed: PlaybackSpeed, synchronized: Bool = true) {
-    self.animator?.changeAnimationSpeed(to: speed, synchronized: synchronized)
-  }
-  
-  public func changeAnimationDuration(to duration: TimeInterval, synchronized: Bool = true) {
-    let currentDuration = self.gifLoopDuration
-    let newSpeed = currentDuration / duration
-    self.changeAnimationSpeed(to: newSpeed, synchronized: synchronized)
-  }
-  
-  
 }
