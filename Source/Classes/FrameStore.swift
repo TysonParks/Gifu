@@ -115,7 +115,7 @@ class FrameStore {
     self.currentFrameIndex = currentFrameIndex
     self.timeSinceLastFrameChange = timeSinceLastFrameChange
   }
-
+  
   // MARK: - Frames
   /// Loads the frames from an image source, resizes them, then caches them in `animatedFrames`.
   func prepareFrames(_ completionHandler: (() -> Void)? = nil) {
@@ -140,7 +140,7 @@ class FrameStore {
   /// - parameter index: The index of the duration.
   /// - returns: The duration of the given frame.
   func duration(at index: Int) -> TimeInterval {
-  return animatedFrames[safe: index]?.duration ?? TimeInterval.infinity
+    return animatedFrames[safe: index]?.duration ?? TimeInterval.infinity
   }
 
   /// Checks whether the frame should be changed and calls a handler with the results.
@@ -216,9 +216,9 @@ private extension FrameStore {
   func incrementCurrentFrameIndex() {
     currentFrameIndex = increment(frameIndex: currentFrameIndex)
     if isLastLoop(loopIndex: currentLoop) && isLastFrame(frameIndex: currentFrameIndex) {
-        isFinished = true
+      isFinished = true
     } else if currentFrameIndex == 0 {
-        currentLoop = currentLoop + 1
+      currentLoop = currentLoop + 1
     }
   }
 
@@ -261,20 +261,20 @@ private extension FrameStore {
   }
     
   func setupAnimatedFrames() {
-      resetAnimatedFrames()
-        
-      var duration: TimeInterval = 0
-        
-      (0..<frameCount).forEach { index in
-          let frameDuration = CGImageFrameDuration(with: imageSource, atIndex: index)
-          duration += min(frameDuration, maxTimeStep)
-          animatedFrames += [AnimatedFrame(image: nil, duration: frameDuration)]
-            
-          if index > bufferFrameCount { return }
-          animatedFrames[index] = animatedFrames[index].makeAnimatedFrame(with: loadFrame(at: index))
-      }
-        
-      self.loopDuration = duration
+    resetAnimatedFrames()
+    
+    var duration: TimeInterval = 0
+    
+    (0..<frameCount).forEach { index in
+      let frameDuration = CGImageFrameDuration(with: imageSource, atIndex: index)
+      duration += min(frameDuration, maxTimeStep)
+      animatedFrames += [AnimatedFrame(image: nil, duration: frameDuration)]
+      
+      if index > bufferFrameCount { return }
+      animatedFrames[index] = animatedFrames[index].makeAnimatedFrame(with: loadFrame(at: index))
+    }
+    
+    self.loopDuration = duration
   }
 
   /// Reset animated frames.
@@ -286,15 +286,8 @@ private extension FrameStore {
 
 
 extension FrameStore {
-
-  // DEPRECATE
-//  func newFrameStoreWith(loopDuration: TimeInterval) -> FrameStore {
-//    let originalDuration = self.loopDuration
-//    let newSpeed = loopDuration / originalDuration
-//    
-//    return self.newFrameStoreWith(speed: newSpeed)
-//  }
-  func newFrameStoreWith(speed: PlaybackSpeed) -> FrameStore {
+  
+  func newFrameStoreWith(speed: PlaybackSpeed, synchronized: Bool = true) -> FrameStore {
     let originalStore = self
     let originalAnimatedFrames = originalStore.animatedFrames
     
@@ -302,36 +295,13 @@ extension FrameStore {
     var newDuration: TimeInterval = 0
     
     originalAnimatedFrames.forEach {
-      let newAnimatedFrame = $0.newAnimatedFrameWith(speed: speed)
-      newAnimatedFrames.append(newAnimatedFrame)
-      newDuration += newAnimatedFrame.duration
-    }
-    
-    let newStore = FrameStore(animatedFrames: newAnimatedFrames,
-                              loopDuration: newDuration,
-                              frameCount: originalStore.frameCount,
-                              imageSource: originalStore.imageSource,
-                              size: originalStore.size,
-                              contentMode: originalStore.contentMode,
-                              framePreloadCount: originalStore.bufferFrameCount,
-                              loopCount: originalStore.loopCount,
-                              currentLoop: originalStore.currentLoop,
-                              currentFrameIndex: originalStore.currentFrameIndex,
-                              timeSinceLastFrameChange: originalStore.timeSinceLastFrameChange)
-    
-    return newStore
-  }
-  
-  
-  func newFrameStoreWithSynchronized(speed: PlaybackSpeed) -> FrameStore {
-    let originalStore = self
-    let originalAnimatedFrames = originalStore.animatedFrames
-
-    var newAnimatedFrames = [AnimatedFrame]()
-    var newDuration: TimeInterval = 0
-    
-    originalAnimatedFrames.forEach {
-      let newAnimatedFrame = $0.newAnimatedFrameWithSynchronized(speed: speed)
+      let newAnimatedFrame: AnimatedFrame
+      
+      if synchronized {
+        newAnimatedFrame = $0.newAnimatedFrameWithSynchronized(speed: speed)
+      } else {
+        newAnimatedFrame = $0.newAnimatedFrameWith(speed: speed)
+      }
       newAnimatedFrames.append(newAnimatedFrame)
       newDuration += newAnimatedFrame.duration
     }

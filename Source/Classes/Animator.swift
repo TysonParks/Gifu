@@ -19,7 +19,7 @@ public class Animator {
   
   /// Tyson addition
   var originalFrameStore: FrameStore?
-
+  
   /// Tracks whether the display link is initialized.
   private var displayLinkInitialized: Bool = false
 
@@ -57,8 +57,8 @@ public class Animator {
   fileprivate func updateFrameIfNeeded() {
     guard let store = frameStore else { return }
     if store.isFinished {
-        stopAnimating()
-        return
+      stopAnimating()
+      return
     }
     
     store.shouldChangeFrame(with: displayLink.duration) {
@@ -193,7 +193,7 @@ fileprivate class DisplayLinkProxy {
 /// Tyson addition
 extension Animator {
   
-  func changeAnimationSpeed(to speed: PlaybackSpeed) {
+  func changeAnimationSpeed(to speed: PlaybackSpeed, synchronized: Bool = true) {
     let currentFrameStore: FrameStore
     
     if let originalFrameStore = self.originalFrameStore {
@@ -203,8 +203,9 @@ extension Animator {
       self.originalFrameStore = frameStore
       currentFrameStore = frameStore
     }
-    
-    let newFrameStore = currentFrameStore.newFrameStoreWith(speed: speed)
+
+    let newFrameStore = currentFrameStore.newFrameStoreWith(speed: speed, synchronized: synchronized)
+
     self.frameStore = newFrameStore
   }
 }

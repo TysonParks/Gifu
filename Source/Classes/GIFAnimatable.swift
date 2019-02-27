@@ -16,6 +16,7 @@ public protocol GIFAnimatable: class {
   var contentMode: UIView.ContentMode { get set }
 }
 
+
 /// A single-property protocol that animatable classes can optionally conform to.
 public protocol ImageContainer {
   /// Used for displaying the animation frames.
@@ -242,13 +243,15 @@ extension PlaybackSpeed {
 
 extension GIFAnimatable {
   
-  public func changeAnimationSpeed(to speed: PlaybackSpeed) {
-    self.animator?.changeAnimationSpeed(to: speed)
+  public func changeAnimationSpeed(to speed: PlaybackSpeed, synchronized: Bool = true) {
+    self.animator?.changeAnimationSpeed(to: speed, synchronized: synchronized)
   }
   
-  public func changeAnimationDuration(to duration: TimeInterval) {
+  public func changeAnimationDuration(to duration: TimeInterval, synchronized: Bool = true) {
     let currentDuration = self.gifLoopDuration
     let newSpeed = currentDuration / duration
-    self.changeAnimationSpeed(to: newSpeed)
+    self.changeAnimationSpeed(to: newSpeed, synchronized: synchronized)
   }
+  
+  
 }
