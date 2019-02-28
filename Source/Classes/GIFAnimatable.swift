@@ -208,10 +208,18 @@ extension GIFAnimatable {
 /// Tyson addition
 extension GIFAnimatable {
   
+  /// Change playback speed of animation based upon a speed multiplier.
+  ///
+  /// - parameter speed: A speed multiplier where normal speed = 1.0.
+  /// - parameter synchronized: Indicates whether frame should be synchronized to a frameRate.
   public func changeAnimationSpeed(to speed: PlaybackSpeed, synchronized: Bool = true) {
     self.animator?.changeAnimationSpeed(to: speed, synchronized: synchronized)
   }
   
+  /// Change playback speed of animation based upon a new duration.
+  ///
+  /// - parameter duration: New target duration (gifLoopDuration) for the animation.
+  /// - parameter synchronized: Indicates whether frame should be synchronized to a frameRate.
   public func changeAnimationDuration(to duration: TimeInterval, synchronized: Bool = true) {
     let currentDuration = self.gifLoopDuration
     let newSpeed = currentDuration / duration
@@ -219,6 +227,7 @@ extension GIFAnimatable {
   }
   
   // Could change this to setShouldSynchronizeFrames(synchronize: Bool) and create a setShouldSynchronizeFrames Animator property to be set by this function??
+  
   public func synchronizeFrames() {
     self.changeAnimationSpeed(to: 1.0, synchronized: true)
   }
@@ -241,12 +250,12 @@ public typealias PlaybackSpeed = Double
 
 extension PlaybackSpeed {
   
-  func synchronized(toScreenRefresh fps: RefreshFrameRates = .sixtyFPS) -> Double {
-    return self._synchronize(self, toScreenRefreshRate: fps)
+  func synchronized(to fps: RefreshFrameRates = .sixtyFPS) -> Double {
+    return self._synchronize(self, to: fps)
   }
   
   
-  private func _synchronize(_ duration: Double, toScreenRefreshRate fps: RefreshFrameRates = .sixtyFPS) -> Double {
+  private func _synchronize(_ duration: Double, to fps: RefreshFrameRates = .sixtyFPS) -> Double {
     //    if duration < 0 { return nil }
     let fpsValue = Double(fps.rawValue)
     let syncedDuration: Double

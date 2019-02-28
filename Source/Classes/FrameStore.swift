@@ -92,7 +92,11 @@ class FrameStore {
     self.loopCount = loopCount
   }
   
-  /// Tyson addition
+  /// Creates an FrameStore instance from [AnimatedFrame] and manual setting of all other relevant FrameStore properties.
+  /// Used exculusively by newFrameStoreWith(speed:,synchronized:) method.
+  ///
+  /// - parameter animatedFrames: An array of animated frames from a single GIF image that have been modified from an original FrameStore instance.
+  /// - parameter loopDuration: Total duration of one animation loop recalculated from new animated frames durations.
   private init(animatedFrames: [AnimatedFrame],
                loopDuration: TimeInterval,
                frameCount: Int,
@@ -287,6 +291,11 @@ private extension FrameStore {
 
 extension FrameStore {
   
+  /// Returns a new copy of the original FrameStore object in which each of the AnimatedFrame's durations have been changed by speed and synchronization.
+  ///
+  /// - parameter speed: A speed multiplier where normal speed = 1.0.
+  /// - parameter synchronized: Indicates whether frame should be synchronized to a frameRate.
+  /// - returns: A FrameStore instance.
   func newFrameStoreWith(speed: PlaybackSpeed, synchronized: Bool = true) -> FrameStore {
     let originalStore = self
     let originalAnimatedFrames = originalStore.animatedFrames

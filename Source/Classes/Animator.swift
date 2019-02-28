@@ -17,7 +17,7 @@ public class Animator {
   /// Responsible for loading individual frames and resizing them if necessary.
   var frameStore: FrameStore?
   
-  /// Tyson addition
+  /// Copy of the original FrameStore instance that is created when frameStore is replaced by speed-changed versions.
   var originalFrameStore: FrameStore?
   
   /// Tracks whether the display link is initialized.
@@ -193,6 +193,11 @@ fileprivate class DisplayLinkProxy {
 /// Tyson addition
 extension Animator {
   
+  /// Assigns the initial frameStore instance to originalFrameStore property.
+  /// And updates frameStore property with a new FrameStore instance in which each of the AnimatedFrame's durations have been changed by speed and synchronization.
+  ///
+  /// - parameter speed: A speed multiplier where normal speed = 1.0.
+  /// - parameter synchronized: Indicates whether frame should be synchronized to a frameRate.
   func changeAnimationSpeed(to speed: PlaybackSpeed, synchronized: Bool = true) {
     let currentFrameStore: FrameStore
     

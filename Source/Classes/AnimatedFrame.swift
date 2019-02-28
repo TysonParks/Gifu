@@ -30,19 +30,20 @@ struct AnimatedFrame {
 
 /// Tyson addition
 extension AnimatedFrame {
-  
-  // DEPRECATE
-//  func newAnimatedFrameWith(duration: TimeInterval) -> AnimatedFrame {
-//    return AnimatedFrame(image: self.image, duration: duration)
-//  }
-  
-  
+
+  /// Returns a new instance with the duration changed by a speed factor
+  ///
+  /// - parameter speed: A speed multiplier where normal speed = 1.0.
+  /// - returns: An `AnimatedFrame` instance.
   func newAnimatedFrameWith(speed: PlaybackSpeed) -> AnimatedFrame {
     let newDuration = self.duration / speed
     return AnimatedFrame(image: self.image, duration: newDuration)
   }
   
-  
+  /// Returns a new instance with the duration changed by a speed factor and synchronized
+  ///
+  /// - parameter speed: A speed multiplier where normal speed = 1.0.
+  /// - returns: An `AnimatedFrame` instance.
   func newAnimatedFrameWithSynchronized(speed: PlaybackSpeed) -> AnimatedFrame {
     let syncedDuration = self.duration.synchronized()
     let spedDuration = syncedDuration / speed
