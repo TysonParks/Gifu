@@ -211,53 +211,55 @@ extension GIFAnimatable {
   /// Change playback speed of animation based upon a speed multiplier.
   ///
   /// - parameter speed: A speed multiplier where normal speed = 1.0.
-  /// - parameter synchronized: Indicates whether frame should be synchronized to a frameRate.
-  public func changeAnimationSpeed(to speed: PlaybackSpeed, synchronized: Bool = true) {
-    self.animator?.changeAnimationSpeed(to: speed, synchronized: synchronized)
+  /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate.
+  public func changeAnimationSpeed(to speed: PlaybackSpeed, synchronization: SyncFrameRates = .SyncToSixtyFPS) {
+    self.animator?.changeAnimationSpeed(to: speed, synchronization: synchronization)
   }
   
   /// Change playback speed of animation based upon a new duration.
   ///
   /// - parameter duration: New target duration (gifLoopDuration) for the animation.
-  /// - parameter synchronized: Indicates whether frame should be synchronized to a frameRate.
-  public func changeAnimationDuration(to duration: TimeInterval, synchronized: Bool = true) {
+  /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate.
+  public func changeAnimationDuration(to duration: TimeInterval, synchronization: SyncFrameRates = .SyncToSixtyFPS) {
     let currentDuration = self.gifLoopDuration
     let newSpeed = currentDuration / duration
-    self.changeAnimationSpeed(to: newSpeed, synchronized: synchronized)
+    self.changeAnimationSpeed(to: newSpeed, synchronization: synchronization)
   }
   
   // Could change this to setShouldSynchronizeFrames(synchronize: Bool) and create a setShouldSynchronizeFrames Animator property to be set by this function??
   
-  public func synchronizeFrames() {
-    self.changeAnimationSpeed(to: 1.0, synchronized: true)
+  public func setSynchronization(to synchronization: SyncFrameRates) {
+    self.animator?.synchronization = synchronization
   }
 }
 
 
 // The following ScreenRefreshRates enum, PlaybackSpeed typealias and extension could possibly go into its own 'Double' Extension file?
 // Or is there a more suitable place for these things to live?
-enum RefreshFrameRates: Int {
-  case tenFPS = 10
-  case fifteenFPS = 15
-  case twentyFPS = 20
-  case thirtyFPS = 30
-  case sixtyFPS = 60
-  case oneTwentyFPS = 120
-  case twoFortyFPS = 240
+public enum SyncFrameRates: Int {
+  case notSynchronized = 0
+  case SyncToTenFPS = 10
+  case SyncToFifteenFPS = 15
+  case SyncToTwentyFPS = 20
+  case SyncToThirtyFPS = 30
+  case SyncToSixtyFPS = 60
+  case SyncToOneTwentyFPS = 120
+  case SyncToTwoFortyFPS = 240
 }
 
 public typealias PlaybackSpeed = Double
 
 extension PlaybackSpeed {
   
-  func synchronized(to fps: RefreshFrameRates = .sixtyFPS) -> Double {
-    return self._synchronize(self, to: fps)
+  func synchronized(to synchronization: SyncFrameRates = .SyncToSixtyFPS) -> Double {
+    return self._synchronize(self, to: synchronization)
   }
   
   
-  private func _synchronize(_ duration: Double, to fps: RefreshFrameRates = .sixtyFPS) -> Double {
-    //    if duration < 0 { return nil }
-    let fpsValue = Double(fps.rawValue)
+  private func _synchronize(_ duration: Double, to synchronization: SyncFrameRates = .SyncToSixtyFPS) -> Double {
+    guard duration > 0, synchronization != .notSynchronized else { return duration }
+    
+    let fpsValue = Double(synchronization.rawValue)
     let syncedDuration: Double
     
     let frameRateMultipliedDuration = duration * fpsValue

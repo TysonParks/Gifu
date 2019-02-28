@@ -294,9 +294,9 @@ extension FrameStore {
   /// Returns a new copy of the original FrameStore object in which each of the AnimatedFrame's durations have been changed by speed and synchronization.
   ///
   /// - parameter speed: A speed multiplier where normal speed = 1.0.
-  /// - parameter synchronized: Indicates whether frame should be synchronized to a frameRate.
+  /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate.
   /// - returns: A FrameStore instance.
-  func newFrameStoreWith(speed: PlaybackSpeed, synchronized: Bool = true) -> FrameStore {
+  func newFrameStoreWith(speed: PlaybackSpeed, synchronization: SyncFrameRates = .SyncToSixtyFPS) -> FrameStore {
     let originalStore = self
     let originalAnimatedFrames = originalStore.animatedFrames
     
@@ -304,13 +304,7 @@ extension FrameStore {
     var newDuration: TimeInterval = 0
     
     originalAnimatedFrames.forEach {
-      let newAnimatedFrame: AnimatedFrame
-      
-      if synchronized {
-        newAnimatedFrame = $0.newAnimatedFrameWithSynchronized(speed: speed)
-      } else {
-        newAnimatedFrame = $0.newAnimatedFrameWith(speed: speed)
-      }
+      let newAnimatedFrame = $0.newAnimatedFrameWith(speed: speed, synchronization: synchronization)
       newAnimatedFrames.append(newAnimatedFrame)
       newDuration += newAnimatedFrame.duration
     }
