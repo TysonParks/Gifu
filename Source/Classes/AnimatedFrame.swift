@@ -28,15 +28,15 @@ struct AnimatedFrame {
   }
 }
 
-/// Tyson addition
+// MARK: - GIFControllable
 extension AnimatedFrame {
 
-  /// Returns a new instance with the duration changed by a speed factor and synchronization
+  /// Returns a new instance with the duration modified by speed and/or synchronization.
   ///
   /// - parameter speed: A speed multiplier where normal speed = 1.0.
   /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate.
   /// - returns: An `AnimatedFrame` instance.
-  func newAnimatedFrameWith(speed: PlaybackSpeed, synchronization: SyncFrameRates = .SyncToSixtyFPS) -> AnimatedFrame {
+  func newAnimatedFrameWith(speed: PlaybackSpeed, synchronization: SyncFrameRates = .syncToMaximumFPS) -> AnimatedFrame {
     let syncedDuration = self.duration.synchronized(to: synchronization)
     let spedDuration = syncedDuration / speed
     let syncedSpedDuration = spedDuration.synchronized(to: synchronization)

@@ -14,8 +14,8 @@ public class Animator {
   /// Specifies whether GIF frames should be resized.
   var shouldResizeFrames = false
   
-  /// Frame rate to synchronize frames to.
-  var synchronization: SyncFrameRates = .SyncToSixtyFPS
+  /// Frame rate to synchronize frames to. Default is not synchronized.
+  var synchronization: SyncFrameRates = .notSynchronized
 
   /// Responsible for loading individual frames and resizing them if necessary.
   var frameStore: FrameStore?
@@ -193,15 +193,15 @@ fileprivate class DisplayLinkProxy {
 }
 
 
-/// Tyson addition
+// MARK: - GIFControllable
 extension Animator {
   
-  /// Assigns the initial frameStore instance to originalFrameStore property.
-  /// And updates frameStore property with a new FrameStore instance in which each of the AnimatedFrame's durations have been changed by speed and synchronization.
+  /// Assigns the initial frameStore instance to originalFrameStore property to keep as a reference.
+  /// Updates frameStore property with a new FrameStore instance in which each of the AnimatedFrame's durations have been changed by speed and/or synchronization.
   ///
   /// - parameter speed: A speed multiplier where normal speed = 1.0.
-  /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate.
-  func changeAnimationSpeed(to speed: PlaybackSpeed, synchronization: SyncFrameRates = .SyncToSixtyFPS) {
+  /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate. Default is syncToMaximumFPS.
+  func changeAnimationSpeed(to speed: PlaybackSpeed, synchronization: SyncFrameRates = .syncToMaximumFPS) {
     let currentFrameStore: FrameStore
     
     if let originalFrameStore = self.originalFrameStore {

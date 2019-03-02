@@ -92,6 +92,7 @@ class FrameStore {
     self.loopCount = loopCount
   }
   
+  /// GIFControllable init
   /// Creates an FrameStore instance from [AnimatedFrame] and manual setting of all other relevant FrameStore properties.
   /// Used exculusively by newFrameStoreWith(speed:,synchronized:) method.
   ///
@@ -288,15 +289,15 @@ private extension FrameStore {
 }
 
 
-
+// MARK: - GIFControllable
 extension FrameStore {
   
-  /// Returns a new copy of the original FrameStore object in which each of the AnimatedFrame's durations have been changed by speed and synchronization.
+  /// Returns a new instance of the original FrameStore object in which each of the AnimatedFrame's durations have been changed by speed and synchronization.
   ///
   /// - parameter speed: A speed multiplier where normal speed = 1.0.
-  /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate.
+  /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate. Default is syncToMaximumFPS.
   /// - returns: A FrameStore instance.
-  func newFrameStoreWith(speed: PlaybackSpeed, synchronization: SyncFrameRates = .SyncToSixtyFPS) -> FrameStore {
+  func newFrameStoreWith(speed: PlaybackSpeed, synchronization: SyncFrameRates = .syncToMaximumFPS) -> FrameStore {
     let originalStore = self
     let originalAnimatedFrames = originalStore.animatedFrames
     
