@@ -297,11 +297,12 @@ public enum SyncFrameRates: Int {
   /// Maximum refresh rate of the device screen.
   var maxFPS: Int {
     let maxFPS: Int
-    if #available(iOSApplicationExtension 10.3, *) {
+    if #available(iOS 10.3, *) {
       maxFPS = UIScreen.main.maximumFramesPerSecond
     } else {
       maxFPS = 60
     }
+    
     return maxFPS
   }
   
