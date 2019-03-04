@@ -261,9 +261,9 @@ extension GIFControllable {
 public typealias PlaybackSpeed = Double
 
 /// An enum defining available frame rates for synchronization.
-/// Using synchronization rates below maxFPS may slow down an animation. Historically most web browsers have rate limited GIF frame durations of 5ms or less (20fps), pushing any frame durations below 5ms or 6ms up to 10ms, effectively slowing the animation speed to 10fps. (For better or worse, Gifu natively mirrors this behavior as well.) Because of this the vast majority of gifs are created with frame rates less than 20fps.
+/// Using synchronization rates below maxFPS may slow down an animation. Historically most web browsers have rate limited GIF frame durations ranging from 2ms - 6ms or less (more than 50 - 20fps, depending upon browser), usually pushing any frame durations below the threshold up to 10ms, effectively slowing the animation speed to 10fps. (For better or worse, Gifu natively mirrors this behavior as well using a 2ms threshold.) Because of this the vast majority of GIFs are created with frame rates less than 20fps so that the GIF will display consistenly on all browsers.
 /// http://nullsleep.tumblr.com/post/16524517190/animated-gif-minimum-frame-delay-browser
-/// Thus the use of synchronization below this threshold then becomes a rate limiter that may be useful for synchronizing multiple gifs to the same frame rate and/or improving performance(?)
+/// Thus the use of my synchronization implementation with frame rates at or below 30fps can then make synchronization a rate limiter that may be useful for synchronizing multiple gifs to the same frame rate and/or improving performance (Experimental. Still need to test for actual performance implications).
 public enum SyncFrameRates: Int {
   /// Basic synchronization frame rates
   case syncToMaximumFPS = -1
@@ -272,27 +272,23 @@ public enum SyncFrameRates: Int {
   case syncToOneTwentyFPS = 120
   
   /// Rate limiting frame rates.
-  // FIXME: (?)FrameLimiter implementation possibilities
-  // (?)Although personally useful, perhaps these extra rate limiting frame rate options may be too beyond the scope of most developers to include in Gifu?
-  // (?)Alternatively these could even be pushed to their own LimiterFrameRates(?) enum and I could create a separate setFrameLimiter() method to clarify usage.
-  // (?)Under the hood it would still operate the same by setting the animator's synchronization value; the setFrameLimiter() method would simply override a value set by the setSynchronization() method .
-  /// 60FPS sub-frame rates (factors of 60).
-  case syncToOneFPS = 1
-  case syncToTwoFPS = 2
-  case synceToThreeFPS = 3
-  case syncToFourFPS = 4
-  case syncToFiveFPS = 5
-  case syncToSixFPS = 6
-  case syncToTenFPS = 10
-  case syncToTwelveFPS = 12
-  case syncToFifteenFPS = 15
-  case syncToTwentyFPS = 20
-  case syncToThirtyFPS = 30
+  /// 60FPS sub-frame limiter rates (factors of 60).
+  case limitToOneFPS = 1
+  case limitToTwoFPS = 2
+  case limitToThreeFPS = 3
+  case limitToFourFPS = 4
+  case limitToFiveFPS = 5
+  case limitToSixFPS = 6
+  case limitToTenFPS = 10
+  case limitToTwelveFPS = 12
+  case limitToFifteenFPS = 15
+  case limitToTwentyFPS = 20
+  case limitToThirtyFPS = 30
   
-  /// 120FPS additional sub-frame rates (factors of 120).
-  case syncToEightFPS = 8
-  case syncToTwentyFourFPS = 24
-  case syncToFortyFPS = 40
+  /// 120FPS additional sub-frame limiter rates (factors of 120).
+  case limitToEightFPS = 8
+  case limitToTwentyFourFPS = 24
+  case limitToFortyFPS = 40
   
   /// Maximum refresh rate of the device screen.
   var maxFPS: Int {
@@ -311,19 +307,19 @@ public enum SyncFrameRates: Int {
     case .syncToMaximumFPS:
       return self.maxFPS
       
-    case .syncToEightFPS:
+    case .limitToEightFPS:
       if maxFPS == 120 {
         return self.rawValue
       } else {
         return 10
       }
-    case .syncToTwentyFourFPS:
+    case .limitToTwentyFourFPS:
       if maxFPS == 120 {
         return self.rawValue
       } else {
         return 30
       }
-    case .syncToFortyFPS:
+    case .limitToFortyFPS:
       if maxFPS == 120 {
         return self.rawValue
       } else {
