@@ -215,14 +215,14 @@ extension GIFAnimatable {
 // FIXME: (?)Protocol Requirements
 // (?)I opted not to make property or protocol method requirements here in order to respect GIFAnimatable's style/useage of optional methods and computed properties, as well as trying to make my contributions minimally intrusive.
 // (?)However it might be worth considering having required speed, synchronization, (and/or frameLimiter?) properties in the protocol?
-protocol GIFControllable: GIFAnimatable {}
+public protocol GIFControllable: GIFAnimatable {}
 
-extension GIFControllable {
+public extension GIFControllable {
   /// Change playback speed of animation based upon a speed multiplier.
   ///
   /// - parameter speed: A speed multiplier where normal speed = 1.0.
   /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate. Default is syncToMaximumFPS.
-  public func setAnimationSpeed(to speed: PlaybackSpeed, synchronization: SyncFrameRates = .syncToMaximumFPS) {
+  func setAnimationSpeed(to speed: PlaybackSpeed, synchronization: SyncFrameRates = .syncToMaximumFPS) {
     self.animator?.changeAnimationSpeed(to: speed, synchronization: synchronization)
   }
   
@@ -230,7 +230,7 @@ extension GIFControllable {
   ///
   /// - parameter duration: New target duration (gifLoopDuration) for the animation.
   /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate. Default is syncToMaximumFPS.
-  public func setAnimationDuration(to duration: TimeInterval, synchronization: SyncFrameRates = .syncToMaximumFPS) {
+  func setAnimationDuration(to duration: TimeInterval, synchronization: SyncFrameRates = .syncToMaximumFPS) {
     let currentDuration = self.gifLoopDuration
     let newSpeed = currentDuration / duration
     self.setAnimationSpeed(to: newSpeed, synchronization: synchronization)
@@ -243,7 +243,7 @@ extension GIFControllable {
   /// Set the synchronization parameter for the animator. Default is syncToMaximumFPS.
   ///
   /// - parameter synchronization: Indicates whether frame should be synchronized to a frameRate, and to which frameRate.
-  public func setSynchronization(to synchronization: SyncFrameRates) {
+  func setSynchronization(to synchronization: SyncFrameRates) {
     let maxFPS = SyncFrameRates.syncToMaximumFPS.intValue
     let sync: SyncFrameRates
     
